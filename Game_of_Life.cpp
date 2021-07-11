@@ -1,20 +1,18 @@
 ﻿#include <iostream>
 #include <unordered_map>
 #include <list>
-#include <random>
+//#include <stdlib.h>
+#include "windows.h"
 using namespace std;
 struct cell
 {
 	int x;
 	int y;
 	cell(int X, int Y)
-
 	{
 		x = X;
 		y = Y;
-
 	}
-	
 	bool operator==(const cell& p) const;
 	
 };
@@ -33,37 +31,37 @@ class MyHashFunction {
 
 		size_t operator()(const cell& var) const
 		{
-		   return (hash<int>()(var.x)) ^ (hash<int>()(var.y));
+			return (hash<long long>()((long long)var.x * 0xFFFF + var.y));
 		}
 
 };
-
 class life
 {
 	private:
 		int height, width;
 		unordered_map<cell,bool, MyHashFunction> planet;
 		unordered_map<cell,bool, MyHashFunction>::iterator it;
+		list<cell>neighbors(const cell& var);
 	public:
 		life(int, int);
-		const unordered_map<cell, bool, MyHashFunction>& access_planet() const;
+		//const unordered_map<cell, bool, MyHashFunction>& access_planet() const;
 		void update_planet(const unordered_map<cell, bool, MyHashFunction>& newBrd);
 		void new_iteration();
-		void addPoint(cell&);
+		//void addPoint(cell&);
 		void display();
-		list<cell>neighbors(const cell& var);
+		
 };
 
-
+/*
 const unordered_map<cell, bool, MyHashFunction>& life::access_planet() const
 {
 	return planet;
 }
 
-void life::update_planet(const unordered_map<cell, bool, MyHashFunction>& new_planet)
+/*void life::update_planet(const unordered_map<cell, bool, MyHashFunction>& new_planet)
 {
 	planet = new_planet;
-}
+}*/
 list<cell> life::neighbors(const cell& var)
 {
 	list<cell> points;
@@ -129,8 +127,6 @@ void life::new_iteration()
 	}
 
 }
-
-
 void life::display()
 {
 
@@ -139,47 +135,51 @@ void life::display()
 		for (int j = 0;j < height;++j)
 		{
 			it = planet.find({ i,j });
-			cout << (*it).second;
+			//cout << (*it).second<<" ";
+			if ((*it).second == 1) cout << "*  ";
+			else cout << "  ";
 		}
 		cout << endl;
 	}
-}
-			
+}		
 life::life(int h, int w)
 {
 	height = h;
 	width = w;
-	//random_device rd;
-	//mt19937 gen(rd());
-	//uniform_int_distribution<> dis(1, 10000);
+	srand(time(NULL));
 	for (int i = 0;i < width;++i)
 		for (int j = 0;j < height;++j)
 		{
-			if (i == 3 && j == 2) planet[{i, j}] = true;
-			else if (i == 3 && j == 3) planet[{i, j}] = true;
+			/*if (i == 3 && j ==3) planet[{i, j}] = true;
 			else if (i == 3 && j == 4) planet[{i, j}] = true;
+			else if (i == 3 && j == 5) planet[{i, j}] = true;
 			else
-				planet[{i, j}] = false;
-			/*unsigned int num = dis(gen);
-			if (num % 2 == 0)
-				planet[{i,j}]=true;
+				planet[{i, j}] = false;*/
+			bool num = rand() % 2;
+			if (num == 0)
+				planet[{i,j}]=false;
 
 			else
-				planet[{i, j}]=false;
-`			*/
+				planet[{i, j}]= true;
+			
 		}
 }
 int main()
 {
-	life a(7,7);
-	a.display();
-	cout << endl;
-	a.new_iteration();
-	a.display();
-	cout << endl;
-	a.new_iteration();
-	a.display();
-	a.neighbors({ 2,2 });
+	int height, width, iterations;
+	cout << "Enter the height and width: " << endl;
+	cin >> height >> width;
+	cout << "Enter the number of iterations: " << endl;
+	cin >> iterations;
+	life a(height, width);
+	do {
+		system("cls");
+		a.display();
+		cout << endl;
+		a.new_iteration();
+		Sleep(200);
+		--iterations;
+	} while (iterations>0);
 	return 0;
 };
 
