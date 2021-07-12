@@ -31,7 +31,7 @@ class MyHashFunction {
 
 		size_t operator()(const cell& var) const
 		{
-			return (hash<long long>()((long long)var.x * 0xFFFF + var.y));
+			return (hash<long long>()((long long)var.x * 0x10000 + var.y));
 		}
 
 };
