@@ -1,10 +1,10 @@
-﻿#include <iostream>
+#include <iostream>
 #include <unordered_map>
 #include <list>
 //#include <stdlib.h>
 #include "windows.h"
 using namespace std;
-struct cell
+struct cell//one cell
 {
 	int x;
 	int y;
@@ -26,7 +26,7 @@ bool cell::operator==(const cell& p) const
 		return x < var.x;
 	else return y < var.y;
 }*/
-class MyHashFunction {
+class MyHashFunction { //Hash function for a hash table
 	public:
 
 		size_t operator()(const cell& var) const
@@ -35,20 +35,20 @@ class MyHashFunction {
 		}
 
 };
-class life
+class life  //the class of the game itself
 {
 	private:
 		int height, width;
-		unordered_map<cell,bool, MyHashFunction> planet;
+		unordered_map<cell,bool, MyHashFunction> planet;//all cells with their value (live/dead) are stored in a hash table
 		unordered_map<cell,bool, MyHashFunction>::iterator it;
-		list<cell>neighbors(const cell& var);
+		list<cell>neighbors(const cell& var);//list of cell neighbors
 	public:
 		life(int, int);
 		//const unordered_map<cell, bool, MyHashFunction>& access_planet() const;
-		void update_planet(const unordered_map<cell, bool, MyHashFunction>& newBrd);
-		void new_iteration();
+		void update_planet(const unordered_map<cell, bool, MyHashFunction>& newBrd);//update the planet
+		void new_iteration();//new iteration
 		//void addPoint(cell&);
-		void display();
+		void display();//output to the display
 		
 };
 
@@ -62,7 +62,7 @@ const unordered_map<cell, bool, MyHashFunction>& life::access_planet() const
 {
 	planet = new_planet;
 }*/
-list<cell> life::neighbors(const cell& var)
+list<cell> life::neighbors(const cell& var)//returns a list of all neighbors
 {
 	list<cell> points;
 	int x,y;
@@ -110,7 +110,7 @@ void life::new_iteration()
 			}
 		}
 		
-		if (alive_neighbors ==3 ) alive.push_back(item.first);
+		if (alive_neighbors ==3 ) alive.push_back(item.first);//we add "live" cells to the list
 		else if(item.second == true && (alive_neighbors == 2 || alive_neighbors ==3))  alive.push_back(item.first);;
 
 		alive_neighbors = 0;
